@@ -23,7 +23,7 @@ var (
 	SystemPCIeDeviceLabelNames        = []string{"hostname", "resource", "pcie_device", "pcie_device_id", "pcie_device_partnumber", "pcie_device_type", "pcie_serial_number"}
 	SystemNetworkInterfaceLabelNames  = []string{"hostname", "resource", "network_interface", "network_interface_id"}
 	SystemEthernetInterfaceLabelNames = []string{"hostname", "resource", "ethernet_interface", "ethernet_interface_id", "ethernet_interface_speed"}
-	SystemPCIeFunctionLabelNames      = []string{"hostname", "resource", "pcie_function_name", "pcie_function_id", "pci_function_deviceclass", "pci_function_type"}
+//	SystemPCIeFunctionLabelNames      = []string{"hostname", "resource", "pcie_function_name", "pcie_function_id", "pci_function_deviceclass", "pci_function_type"}
 
 	SystemLogServiceLabelNames = []string{"system_id", "log_service", "log_service_id", "log_service_enabled", "log_service_overwrite_policy"}
 	SystemLogEntryLabelNames   = []string{"system_id", "log_service", "log_service_id", "log_entry", "log_entry_id", "log_entry_code", "log_entry_type", "log_entry_message_id", "log_entry_sensor_number", "log_entry_sensor_type"}
@@ -535,22 +535,22 @@ func parseEthernetInterface(ch chan<- prometheus.Metric, systemHostName string, 
 	ch <- prometheus.MustNewConstMetric(systemMetrics["system_ethernet_interface_link_enabled"].desc, prometheus.GaugeValue, boolToFloat64(ethernetInterfaceEnabled), systemEthernetInterfaceLabelValues...)
 }
 
-func parsePcieFunction(ch chan<- prometheus.Metric, systemHostName string, pcieFunction *redfish.PCIeFunction, wg *sync.WaitGroup) {
-	defer wg.Done()
-	pcieFunctionName := pcieFunction.Name
-	pcieFunctionID := fmt.Sprint(pcieFunction.ID)
-	pciFunctionDeviceclass := fmt.Sprint(pcieFunction.DeviceClass)
-	pciFunctionType := fmt.Sprint(pcieFunction.FunctionType)
-	pciFunctionState := pcieFunction.Status.State
-	pciFunctionHealthState := pcieFunction.Status.Health
-
-	systemPCIeFunctionLabelLabelValues := []string{systemHostName, "pcie_function", pcieFunctionName, pcieFunctionID, pciFunctionDeviceclass, pciFunctionType}
-
-	if pciFunctionStateValue, ok := parseCommonStatusState(pciFunctionState); ok {
-		ch <- prometheus.MustNewConstMetric(systemMetrics["system_pcie_function_state"].desc, prometheus.GaugeValue, pciFunctionStateValue, systemPCIeFunctionLabelLabelValues...)
-	}
-
-	if pciFunctionHealthStateValue, ok := parseCommonStatusHealth(pciFunctionHealthState); ok {
-		ch <- prometheus.MustNewConstMetric(systemMetrics["system_pcie_function_health_state"].desc, prometheus.GaugeValue, pciFunctionHealthStateValue, systemPCIeFunctionLabelLabelValues...)
-	}
-}
+//func parsePcieFunction(ch chan<- prometheus.Metric, systemHostName string, pcieFunction *redfish.PCIeFunction, wg *sync.WaitGroup) {
+//	defer wg.Done()
+//	pcieFunctionName := pcieFunction.Name
+//	pcieFunctionID := fmt.Sprint(pcieFunction.ID)
+//	pciFunctionDeviceclass := fmt.Sprint(pcieFunction.DeviceClass)
+//	pciFunctionType := fmt.Sprint(pcieFunction.FunctionType)
+//	pciFunctionState := pcieFunction.Status.State
+//	pciFunctionHealthState := pcieFunction.Status.Health
+//
+//	systemPCIeFunctionLabelLabelValues := []string{systemHostName, "pcie_function", pcieFunctionName, pcieFunctionID, pciFunctionDeviceclass, pciFunctionType}
+//
+//	if pciFunctionStateValue, ok := parseCommonStatusState(pciFunctionState); ok {
+//		ch <- prometheus.MustNewConstMetric(systemMetrics["system_pcie_function_state"].desc, prometheus.GaugeValue, pciFunctionStateValue, systemPCIeFunctionLabelLabelValues...)
+//	}
+//
+//	if pciFunctionHealthStateValue, ok := parseCommonStatusHealth(pciFunctionHealthState); ok {
+//		ch <- prometheus.MustNewConstMetric(systemMetrics["system_pcie_function_health_state"].desc, prometheus.GaugeValue, pciFunctionHealthStateValue, systemPCIeFunctionLabelLabelValues...)
+//	}
+//}
