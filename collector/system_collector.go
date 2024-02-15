@@ -81,8 +81,8 @@ func createSystemMetricMap() map[string]Metric {
 	addToMetricMap(systemMetrics, SystemSubsystem, "pcie_device_state", fmt.Sprintf("system pcie device state,%s", CommonStateHelp), SystemPCIeDeviceLabelNames)
 	addToMetricMap(systemMetrics, SystemSubsystem, "pcie_device_health_state", fmt.Sprintf("system pcie device health state,%s", CommonHealthHelp), SystemPCIeDeviceLabelNames)
 
-	addToMetricMap(systemMetrics, SystemSubsystem, "pcie_function_state", fmt.Sprintf("system pcie function state,%s", CommonStateHelp), SystemPCIeFunctionLabelNames)
-	addToMetricMap(systemMetrics, SystemSubsystem, "pcie_function_health_state", fmt.Sprintf("system pcie device function state,%s", CommonHealthHelp), SystemPCIeFunctionLabelNames)
+//	addToMetricMap(systemMetrics, SystemSubsystem, "pcie_function_state", fmt.Sprintf("system pcie function state,%s", CommonStateHelp), SystemPCIeFunctionLabelNames)
+//	addToMetricMap(systemMetrics, SystemSubsystem, "pcie_function_health_state", fmt.Sprintf("system pcie device function state,%s", CommonHealthHelp), SystemPCIeFunctionLabelNames)
 
 	addToMetricMap(systemMetrics, SystemSubsystem, "network_interface_state", fmt.Sprintf("system network interface state,%s", CommonStateHelp), SystemNetworkInterfaceLabelNames)
 	addToMetricMap(systemMetrics, SystemSubsystem, "network_interface_health_state", fmt.Sprintf("system network interface health state,%s", CommonHealthHelp), SystemNetworkInterfaceLabelNames)
@@ -344,17 +344,17 @@ func (s *SystemCollector) Collect(ch chan<- prometheus.Metric) {
 				}
 			}
 			//process pci functions
-			pcieFunctions, err := system.PCIeFunctions()
-			if err != nil {
-				systemLogContext.WithField("operation", "system.PCIeFunctions()").WithError(err).Error("error getting PCI-E device function data from system")
-			} else if pcieFunctions == nil {
-				systemLogContext.WithField("operation", "system.PCIeFunctions()").Info("no PCI-E device function data found")
-			} else {
-				wg9.Add(len(pcieFunctions))
-				for _, pcieFunction := range pcieFunctions {
-					go parsePcieFunction(ch, systemHostName, pcieFunction, wg9)
-				}
-			}
+//			pcieFunctions, err := system.PCIeFunctions()
+//			if err != nil {
+//				systemLogContext.WithField("operation", "system.PCIeFunctions()").WithError(err).Error("error getting PCI-E device function data from system")
+//			} else if pcieFunctions == nil {
+//				systemLogContext.WithField("operation", "system.PCIeFunctions()").Info("no PCI-E device function data found")
+//			} else {
+//				wg9.Add(len(pcieFunctions))
+//				for _, pcieFunction := range pcieFunctions {
+//					go parsePcieFunction(ch, systemHostName, pcieFunction, wg9)
+//				}
+//			}
 
 			// process log services
 			logServices, err := system.LogServices()
