@@ -23,7 +23,7 @@ var (
 	SystemPCIeDeviceLabelNames        = []string{"hostname", "resource", "pcie_device", "pcie_device_id", "pcie_device_partnumber", "pcie_device_type", "pcie_serial_number"}
 	SystemNetworkInterfaceLabelNames  = []string{"hostname", "resource", "network_interface", "network_interface_id"}
 	SystemEthernetInterfaceLabelNames = []string{"hostname", "resource", "ethernet_interface", "ethernet_interface_id", "ethernet_interface_speed"}
-	SystemPCIeFunctionLabelNames      = []string{"hostname", "resource", "pcie_function_name", "pcie_function_id", "pci_function_deviceclass", "pci_function_type"}
+//	SystemPCIeFunctionLabelNames      = []string{"hostname", "resource", "pcie_function_name", "pcie_function_id", "pci_function_deviceclass", "pci_function_type"}
 
 	SystemLogServiceLabelNames = []string{"system_id", "log_service", "log_service_id", "log_service_enabled", "log_service_overwrite_policy"}
 	SystemLogEntryLabelNames   = []string{"system_id", "log_service", "log_service_id", "log_entry", "log_entry_id", "log_entry_code", "log_entry_type", "log_entry_message_id", "log_entry_sensor_number", "log_entry_sensor_type"}
@@ -81,8 +81,8 @@ func createSystemMetricMap() map[string]Metric {
 	addToMetricMap(systemMetrics, SystemSubsystem, "pcie_device_state", fmt.Sprintf("system pcie device state,%s", CommonStateHelp), SystemPCIeDeviceLabelNames)
 	addToMetricMap(systemMetrics, SystemSubsystem, "pcie_device_health_state", fmt.Sprintf("system pcie device health state,%s", CommonHealthHelp), SystemPCIeDeviceLabelNames)
 
-	addToMetricMap(systemMetrics, SystemSubsystem, "pcie_function_state", fmt.Sprintf("system pcie function state,%s", CommonStateHelp), SystemPCIeFunctionLabelNames)
-	addToMetricMap(systemMetrics, SystemSubsystem, "pcie_function_health_state", fmt.Sprintf("system pcie device function state,%s", CommonHealthHelp), SystemPCIeFunctionLabelNames)
+//	addToMetricMap(systemMetrics, SystemSubsystem, "pcie_function_state", fmt.Sprintf("system pcie function state,%s", CommonStateHelp), SystemPCIeFunctionLabelNames)
+//	addToMetricMap(systemMetrics, SystemSubsystem, "pcie_function_health_state", fmt.Sprintf("system pcie device function state,%s", CommonHealthHelp), SystemPCIeFunctionLabelNames)
 
 	addToMetricMap(systemMetrics, SystemSubsystem, "network_interface_state", fmt.Sprintf("system network interface state,%s", CommonStateHelp), SystemNetworkInterfaceLabelNames)
 	addToMetricMap(systemMetrics, SystemSubsystem, "network_interface_health_state", fmt.Sprintf("system network interface health state,%s", CommonHealthHelp), SystemNetworkInterfaceLabelNames)
@@ -344,17 +344,17 @@ func (s *SystemCollector) Collect(ch chan<- prometheus.Metric) {
 				}
 			}
 			//process pci functions
-			pcieFunctions, err := system.PCIeFunctions()
-			if err != nil {
-				systemLogContext.WithField("operation", "system.PCIeFunctions()").WithError(err).Error("error getting PCI-E device function data from system")
-			} else if pcieFunctions == nil {
-				systemLogContext.WithField("operation", "system.PCIeFunctions()").Info("no PCI-E device function data found")
-			} else {
-				wg9.Add(len(pcieFunctions))
-				for _, pcieFunction := range pcieFunctions {
-					go parsePcieFunction(ch, systemHostName, pcieFunction, wg9)
-				}
-			}
+//			pcieFunctions, err := system.PCIeFunctions()
+//			if err != nil {
+//				systemLogContext.WithField("operation", "system.PCIeFunctions()").WithError(err).Error("error getting PCI-E device function data from system")
+//			} else if pcieFunctions == nil {
+//				systemLogContext.WithField("operation", "system.PCIeFunctions()").Info("no PCI-E device function data found")
+//			} else {
+//				wg9.Add(len(pcieFunctions))
+//				for _, pcieFunction := range pcieFunctions {
+//					go parsePcieFunction(ch, systemHostName, pcieFunction, wg9)
+//				}
+//			}
 
 			// process log services
 			logServices, err := system.LogServices()
@@ -535,22 +535,22 @@ func parseEthernetInterface(ch chan<- prometheus.Metric, systemHostName string, 
 	ch <- prometheus.MustNewConstMetric(systemMetrics["system_ethernet_interface_link_enabled"].desc, prometheus.GaugeValue, boolToFloat64(ethernetInterfaceEnabled), systemEthernetInterfaceLabelValues...)
 }
 
-func parsePcieFunction(ch chan<- prometheus.Metric, systemHostName string, pcieFunction *redfish.PCIeFunction, wg *sync.WaitGroup) {
-	defer wg.Done()
-	pcieFunctionName := pcieFunction.Name
-	pcieFunctionID := fmt.Sprint(pcieFunction.ID)
-	pciFunctionDeviceclass := fmt.Sprint(pcieFunction.DeviceClass)
-	pciFunctionType := fmt.Sprint(pcieFunction.FunctionType)
-	pciFunctionState := pcieFunction.Status.State
-	pciFunctionHealthState := pcieFunction.Status.Health
-
-	systemPCIeFunctionLabelLabelValues := []string{systemHostName, "pcie_function", pcieFunctionName, pcieFunctionID, pciFunctionDeviceclass, pciFunctionType}
-
-	if pciFunctionStateValue, ok := parseCommonStatusState(pciFunctionState); ok {
-		ch <- prometheus.MustNewConstMetric(systemMetrics["system_pcie_function_state"].desc, prometheus.GaugeValue, pciFunctionStateValue, systemPCIeFunctionLabelLabelValues...)
-	}
-
-	if pciFunctionHealthStateValue, ok := parseCommonStatusHealth(pciFunctionHealthState); ok {
-		ch <- prometheus.MustNewConstMetric(systemMetrics["system_pcie_function_health_state"].desc, prometheus.GaugeValue, pciFunctionHealthStateValue, systemPCIeFunctionLabelLabelValues...)
-	}
-}
+//func parsePcieFunction(ch chan<- prometheus.Metric, systemHostName string, pcieFunction *redfish.PCIeFunction, wg *sync.WaitGroup) {
+//	defer wg.Done()
+//	pcieFunctionName := pcieFunction.Name
+//	pcieFunctionID := fmt.Sprint(pcieFunction.ID)
+//	pciFunctionDeviceclass := fmt.Sprint(pcieFunction.DeviceClass)
+//	pciFunctionType := fmt.Sprint(pcieFunction.FunctionType)
+//	pciFunctionState := pcieFunction.Status.State
+//	pciFunctionHealthState := pcieFunction.Status.Health
+//
+//	systemPCIeFunctionLabelLabelValues := []string{systemHostName, "pcie_function", pcieFunctionName, pcieFunctionID, pciFunctionDeviceclass, pciFunctionType}
+//
+//	if pciFunctionStateValue, ok := parseCommonStatusState(pciFunctionState); ok {
+//		ch <- prometheus.MustNewConstMetric(systemMetrics["system_pcie_function_state"].desc, prometheus.GaugeValue, pciFunctionStateValue, systemPCIeFunctionLabelLabelValues...)
+//	}
+//
+//	if pciFunctionHealthStateValue, ok := parseCommonStatusHealth(pciFunctionHealthState); ok {
+//		ch <- prometheus.MustNewConstMetric(systemMetrics["system_pcie_function_health_state"].desc, prometheus.GaugeValue, pciFunctionHealthStateValue, systemPCIeFunctionLabelLabelValues...)
+//	}
+//}
