@@ -303,21 +303,21 @@ func (s *SystemCollector) Collect(ch chan<- prometheus.Metric) {
 				}
 			}
 
-			//process simple storage
-			simpleStorages, err := system.SimpleStorages()
-			if err != nil {
-				systemLogContext.WithField("operation", "system.SimpleStorages()").WithError(err).Error("error getting simple storage data from system")
-			} else if simpleStorages == nil {
-				systemLogContext.WithField("operation", "system.SimpleStorages()").Info("no simple storage data found")
-			} else {
-				for _, simpleStorage := range simpleStorages {
-					devices := simpleStorage.Devices
-					wg8.Add(len(devices))
-					for _, device := range devices {
-						go parseDevice(ch, systemHostName, device, wg8)
-					}
-				}
-			}
+//			//process simple storage
+//			simpleStorages, err := system.SimpleStorages()
+//			if err != nil {
+//				systemLogContext.WithField("operation", "system.SimpleStorages()").WithError(err).Error("error getting simple storage data from system")
+//			} else if simpleStorages == nil {
+//				systemLogContext.WithField("operation", "system.SimpleStorages()").Info("no simple storage data found")
+//			} else {
+//				for _, simpleStorage := range simpleStorages {
+//					devices := simpleStorage.Devices
+//					wg8.Add(len(devices))
+//					for _, device := range devices {
+//						go parseDevice(ch, systemHostName, device, wg8)
+//					}
+//				}
+//			}
 //			//process pci functions
 //			pcieFunctions, err := system.PCIeFunctions()
 //			if err != nil {
