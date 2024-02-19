@@ -272,7 +272,7 @@ func (s *SystemCollector) Collect(ch chan<- prometheus.Metric) {
 												controllerName := controllerODataIDslice[len(controllerODataIDslice)-1]
 												controllerState := controller.Status.State
 												controllerHealthState := controller.Status.Health
-												controllerLabelValues := []string{ "storage_controller", controllerName, systemHostName)
+												controllerLabelValues := []string{"storage_controller", controllerName, systemHostName}
 												if controllerStateValue,ok := parseCommonStatusState(controllerState); ok {
 													ch <- prometheus.MustNewConstMetric(s.metrics["system_storage_controller_state"].desc, prometheus.GaugeValue, controllerStateValue, //controllerLabelValues...)
 					
