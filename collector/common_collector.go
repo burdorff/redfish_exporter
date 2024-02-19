@@ -2,10 +2,10 @@ package collector
 
 import (
 	"fmt"
-	"sync"
+//	"sync"
 
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/stmcginnis/gofish/redfish"
+//	"github.com/stmcginnis/gofish/redfish"
 )
 
 const (
