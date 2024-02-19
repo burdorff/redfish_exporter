@@ -17,7 +17,7 @@ var (
 	SystemMemoryLabelNames            = []string{"hostname", "resource", "memory", "memory_id"}
 	SystemProcessorLabelNames         = []string{"hostname", "resource", "processor", "processor_id"}
 	SystemVolumeLabelNames            = []string{"hostname", "resource", "volume", "volume_id"}
-	SystemDeviceLabelNames            = []string{"hostname", "resource", "device", "device_id"}
+	SystemDeviceLabelNames            = []string{"hostname", "resource", "device"}
 	SystemDriveLabelNames             = []string{"hostname", "resource", "drive", "drive_id"}
 	SystemStorageControllerLabelNames = []string{"hostname", "resource", "storage_controller", "storage_controller_id"}
 	SystemPCIeDeviceLabelNames        = []string{"hostname", "resource", "pcie_device", "pcie_device_id", "pcie_device_partnumber", "pcie_device_type", "pcie_serial_number"}
@@ -423,10 +423,9 @@ func parseVolume(ch chan<- prometheus.Metric, systemHostName string, volume *red
 func parseDevice(ch chan<- prometheus.Metric, systemHostName string, device redfish.Device, wg *sync.WaitGroup) {
 	defer wg.Done()
 	deviceName := device.Name
-	deviceID := device.ID
 	deviceState := device.Status.State
 	deviceHealthState := device.Status.Health
-	systemDeviceLabelValues := []string{systemHostName, "device", deviceName, deviceID}
+	systemDeviceLabelValues := []string{systemHostName, "device", deviceName}
 	if deviceStateValue, ok := parseCommonStatusState(deviceState); ok {
 		ch <- prometheus.MustNewConstMetric(systemMetrics["system_simple_storage_device_state"].desc, prometheus.GaugeValue, deviceStateValue, systemDeviceLabelValues...)
 	}
