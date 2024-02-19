@@ -2,7 +2,7 @@ package collector
 
 import (
 	"fmt"
-	"sync"
+//	"sync"
 
 	"github.com/apex/log"
 	"github.com/prometheus/client_golang/prometheus"
