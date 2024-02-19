@@ -423,9 +423,10 @@ func parseVolume(ch chan<- prometheus.Metric, systemHostName string, volume *red
 func parseDevice(ch chan<- prometheus.Metric, systemHostName string, device redfish.Device, wg *sync.WaitGroup) {
 	defer wg.Done()
 	deviceName := device.Name
+	deviceID := device.ID
 	deviceState := device.Status.State
 	deviceHealthState := device.Status.Health
-	systemDeviceLabelValues := []string{systemHostName, "device", deviceName}
+	systemDeviceLabelValues := []string{systemHostName, "device", deviceName, deviceID}
 	if deviceStateValue, ok := parseCommonStatusState(deviceState); ok {
 		ch <- prometheus.MustNewConstMetric(systemMetrics["system_simple_storage_device_state"].desc, prometheus.GaugeValue, deviceStateValue, systemDeviceLabelValues...)
 	}
