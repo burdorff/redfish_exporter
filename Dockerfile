@@ -13,13 +13,13 @@ ENV GO111MODULE=on
 
 # Build dependencies
 RUN mkdir -p /go/src/github.com/ && \
-    git clone -b burdorff-patch-1 https://github.com/burdorff/redfish_exporter /go/src/github.com/jenningsloy318/redfish_exporter && \
-    cd /go/src/github.com/jenningsloy318/redfish_exporter && \
+    git clone https://github.com/burdorff/redfish_exporter /go/src/github.com/burdorff/redfish_exporter && \
+    cd /go/src/github.com/burdorff/redfish_exporter && \
     make build
 
 FROM golang:rc-bullseye
 
-COPY --from=builder /go/src/github.com/jenningsloy318/redfish_exporter/build/redfish_exporter /usr/local/bin/redfish_exporter
+COPY --from=builder /go/src/github.com/burdorff/redfish_exporter/build/redfish_exporter /usr/local/bin/redfish_exporter
 RUN mkdir /etc/prometheus
 COPY config.yml.example /etc/prometheus/redfish_exporter.yml
 CMD ["/usr/local/bin/redfish_exporter","--config.file","/etc/prometheus/redfish_exporter.yml"]
