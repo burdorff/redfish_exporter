@@ -3,7 +3,7 @@ package collector
 import (
 	"fmt"
 	"sync"
-	"strings"
+
 	"github.com/apex/log"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/stmcginnis/gofish"
