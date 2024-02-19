@@ -458,6 +458,7 @@ func parseDevice(ch chan<- prometheus.Metric, systemHostName string, device redf
 		ch <- prometheus.MustNewConstMetric(systemMetrics["system_simple_storage_device_health_state"].desc, prometheus.GaugeValue, deviceHealthStateValue, systemDeviceLabelValues...)
 	}
 }
+
 func parseDrive(ch chan<- prometheus.Metric, systemHostName string, drive *redfish.Drive, wg *sync.WaitGroup) {
 	defer wg.Done()
 	driveName := drive.Name
@@ -465,22 +466,7 @@ func parseDrive(ch chan<- prometheus.Metric, systemHostName string, drive *redfi
 	driveCapacityBytes := drive.CapacityBytes
 	driveState := drive.Status.State
 	driveHealthState := drive.Status.Health
-
-    // Extract enclosure information from the path
-	pathParts := strings.Split(drive.ID, "/")
-
-	var enclosure string
-
-	for i, part := range pathParts {
-            if part == "Enclosure.External.0-1" {
-                // Use "External" as the enclosure value
-                enclosure = "External"
-                break
-            }
-	}
-
-	systemdriveLabelValues := []string{systemHostName, "drive", driveName, driveID, enclosure}
-//	systemdriveLabelValues := []string{systemHostName, "drive", driveName, driveID}
+	systemdriveLabelValues := []string{systemHostName, "drive", driveName, driveID}
 	if driveStateValue, ok := parseCommonStatusState(driveState); ok {
 		ch <- prometheus.MustNewConstMetric(systemMetrics["system_storage_drive_state"].desc, prometheus.GaugeValue, driveStateValue, systemdriveLabelValues...)
 	}
