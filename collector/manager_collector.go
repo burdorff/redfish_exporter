@@ -103,22 +103,22 @@ func (m *ManagerCollector) Collect(ch chan<- prometheus.Metric) {
 				ch <- prometheus.MustNewConstMetric(m.metrics["manager_power_state"].desc, prometheus.GaugeValue, managerPowerStateValue, ManagerLabelValues...)
 			}
 
-			// process log services
-			logServices, err := manager.LogServices()
-			if err != nil {
-				managerLogContext.WithField("operation", "manager.LogServices()").WithError(err).Error("error getting log services from manager")
-			} else if logServices == nil {
-				managerLogContext.WithField("operation", "manager.LogServices()").Info("no log services found")
-			} else {
-				wg := &sync.WaitGroup{}
-				wg.Add(len(logServices))
-
-				for _, logService := range logServices {
-					if err = parseLogService(ch, managerMetrics, ManagerSubmanager, ManagerID, logService, wg); err != nil {
-						managerLogContext.WithField("operation", "manager.LogServices()").WithError(err).Error("error getting log entries from log service")
-					}
-				}
-			}
+//			// process log services
+//			logServices, err := manager.LogServices()
+//			if err != nil {
+//				managerLogContext.WithField("operation", "manager.LogServices()").WithError(err).Error("error getting log services from manager")
+//			} else if logServices == nil {
+//				managerLogContext.WithField("operation", "manager.LogServices()").Info("no log services found")
+//			} else {
+//				wg := &sync.WaitGroup{}
+//				wg.Add(len(logServices))
+//
+//				for _, logService := range logServices {
+//					if err = parseLogService(ch, managerMetrics, ManagerSubmanager, ManagerID, logService, wg); err != nil {
+//						managerLogContext.WithField("operation", "manager.LogServices()").WithError(err).Error("error getting log entries from log service")
+//					}
+//				}
+//			}
 
 			managerLogContext.Info("collector scrape completed")
 		}
