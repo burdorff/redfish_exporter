@@ -3,7 +3,7 @@ package collector
 import (
 	"fmt"
 	"sync"
-
+	"strings"
 	"github.com/apex/log"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/stmcginnis/gofish"
@@ -469,7 +469,7 @@ func parseDrive(ch chan<- prometheus.Metric, systemHostName string, drive *redfi
     // Extract enclosure information from the path
 	pathParts := strings.Split(drive.ID, "/")
 
-	var enclosureValue string
+	var enclosure string
 
 	for i, part := range pathParts {
             if part == "Enclosure.External.0-1" {
